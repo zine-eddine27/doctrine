@@ -1,0 +1,13 @@
+home:
+    path: /
+    controller: App\Controller\MainController::home
+
+show:
+    path: /post/{id}/show
+    controller: App\Controller\MainController::show
+    requirements:
+            id: '\d'
+
+addreview:
+    path: /addreview
+    controller: App\Controller\MainController::addReview

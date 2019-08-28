@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lets Gooo !!{% endblock %}
+
+{% block body %}
+
+<div class="container d-flex justify-content-start">
+    <div class="col-md-4 mt-5 text-left">
+       <p>Liste des posts</p> 
+            <ul class="nav flex-column">
+                {% for post in posts %}
+                <li class="nav-item">      
+                        <a href="{{ path('show',{id : post.id}) }}" class="nav-link">- {{ post.title }}</a> 
+                </li>           
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+{% endblock %}

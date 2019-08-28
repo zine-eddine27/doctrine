@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lets Gooo !!{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-4 mt-2 text-center">
+    
+            <p class="h4">{{ posts.title }}  </p>       
+            
+            <img  src="{{ posts.image }}" class="rounded mx-auto " width="300">    
+            <p class="small">Ecrite par : {{ posts.Author.firstname }} {{ posts.Author.lastname }}</p>
+            <p>{{ posts.body }}</p>
+            
+            <hr>
+            <p class="text-light bg-dark">Reviews</p>
+            {% for review in posts.review %}
+            <p>{{ review.username }} : <span class="font-italic">{{ review.body}}</span> </p> 
+            {% endfor %}
+
+            <a href="{{ path('home') }}" class="btn btn-primary">Accueil</a>
+
+       
+        </div>
+        <form action="{{ path('addreview')}}" method="POST" class="col-md-3 align-self-end">            
+            <div class="form-group">
+                <label for="pseudo-form">Pseudo</label>
+                <input type="text" class="form-control" id="pseudo-form" name="pseudo" placeholder="Pseudo">
+                <label for="reviews-form">Reviews</label>
+                <input type="text" class="form-control" id="reviews-form" name="review" placeholder="Ajouter une critique...">
+                <input type="hidden" name="post-id" value="{{ posts.id }}"> {# j 'envoie l 'id du post yes #} 
+                <button type="submit" class="btn btn-primary mt-2">Envoyer</button>
+            </div>
+        </form>
+       
+    </div>
+</div>
+{% endblock %}
