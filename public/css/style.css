@@ -6,3 +6,8 @@ body{
     font-size: 5px;
     color :rgb(189, 189, 189) ;
 }
+.date{
+    font-size: 0.8rem ;
+    color: grey ;
+    font-style: italic ;
+}

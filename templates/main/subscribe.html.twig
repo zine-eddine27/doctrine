@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog-{% endblock %}
+
+{% block body %}
+    <div class="col-md-6 p-5">
+        <form action="{{ path('addauthor')}}" method="POST" >            
+            <div class="form-group">
+                <label for="prenom">Prénom</label>
+                <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Votre prénom">
+                <label for="nom">nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom de famille">
+                <input type="hidden" name="post-id" value="">
+                <button type="submit" class="btn btn-primary mt-4">S'ajouter auteur</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

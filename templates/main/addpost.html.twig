@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog-{% endblock %}
+
+{% block body %}
+    <div class="col-md-6 p-5">
+
+        <form method="post" >
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text">Selectionner votre nom dans la liste</label>
+                </div>
+                <select class="custom-select">
+                  <option selected >Choix...</option>
+                  {% for author in authors %}
+                      <option value="{{ author.id }}">{{ author.firstname }} {{ author.lastname }}</option>
+                  {% endfor %}               
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label >Titre du post</label>
+                <input type="text" class="form-control" name="title" placeholder="Titre du post">                
+            </div>
+
+            <label >Contenu</label>            
+            <textarea class="form-control"  rows="3"></textarea>
+             
+            <div class="form-group mt-2">
+                <label >Url de l' images</label>
+                <input type="text" class="form-control" name="image" placeholder="http://...">                
+            </div>
+
+            <button type="submit" class="btn btn-primary">Créer mon post !</button>
+            
+        </form>
+    </div>
+{% endblock %}

@@ -27,19 +27,26 @@ class Review
     private $body;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime" , options={"default": "CURRENT_TIMESTAMP"})
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="review")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="Review")
+     * 
      */
     private $post;
+
+    public function __construct(){
+
+        $this->createdAt = new \DateTime() ;
+    }
 
     public function getId(): ?int
     {
@@ -94,7 +101,7 @@ class Review
         return $this;
     }
 
-    public function getPost(): ?Post // il attend un objet Post ok
+    public function getPost(): ?Post
     {
         return $this->post;
     }

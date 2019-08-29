@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Review ;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,30 +36,36 @@ class Post
     /**
      * @ORM\Column(type="integer")
      */
-    private $nbLike;
+    private $nbLike = 0 ;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * 
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updtaedAt;
+    private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="post")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="Post")
+     * 
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="post")
+     * 
      */
     private $review;
 
     public function __construct()
     {
+
+        $this->nbLike = 0 ;
+        $this->createdAt = new \DateTime();
         $this->review = new ArrayCollection();
     }
 
@@ -129,14 +134,14 @@ class Post
         return $this;
     }
 
-    public function getUpdtaedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updtaedAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdtaedAt(\DateTimeInterface $updtaedAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updtaedAt = $updtaedAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

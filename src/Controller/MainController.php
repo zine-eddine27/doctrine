@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Author ;
 use App\Entity\Post ;
 use App\Entity\Review ;
+
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -15,6 +17,7 @@ class MainController extends AbstractController
     
     public function home()
     {
+        
         $posts = $this->getDoctrine()
         ->getRepository(Post::class)
         ->findAll();
@@ -25,21 +28,20 @@ class MainController extends AbstractController
         ]);
     }
 
-    public function show($id)
+    public function show(Post $post)
     {
-        $posts = $this->getDoctrine()
-        ->getRepository(Post::class)
-        ->find($id);
+        
 
 
         return $this->render('main/show.html.twig', [
-            'posts' => $posts
+            'posts' => $post
         ]);
     }
 
     public function addReview(Request $request)
     {
 
+        
         $entityManager = $this->getDoctrine()->getManager();
 
         $pseudo = $request->request->get('pseudo');
@@ -60,9 +62,74 @@ class MainController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->redirectToRoute('show',  ['id' => $id]);
+        return $this->redirectToRoute('show',  ['post' => $id]);
 
 
 
     }
+
+    public function listAuthors()
+    {
+
+        $authors = $this->getDoctrine()
+        ->getRepository(Author::class)
+        ->findAll();
+
+        
+        return $this->render('main/author.html.twig', [
+            'authors' => $authors
+        ]);
+
+
+    }
+
+    public function subscribe(Request $request)
+    {
+
+       
+                
+        return $this->render('main/subscribe.html.twig');
+
+
+    }
+
+
+    public function addAuthor(Request $request)
+    {
+
+        $firstname = $request->request->get('prenom');
+        $lastname= $request->request->get('nom');
+                
+        $newAuthor = new Author ;
+        $newAuthor->setFirstname($firstname)  ;
+        $newAuthor->setLastname($lastname)  ;       
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $entityManager->persist($newAuthor);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home');
+    }
+
+    public function addPost()
+    {
+        $authors = $this->getDoctrine()
+        ->getRepository(Author::class)
+        ->findAll();
+
+
+        return $this->render('main/addpost.html.twig',
+            [
+                'authors' => $authors
+            ]) ;
+    }
+
+    public function addPostForm(Request $request, Author $author)
+    {
+
+        dump($request); exit ;
+    }
+
 }

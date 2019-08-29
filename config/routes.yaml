@@ -3,11 +3,34 @@ home:
     controller: App\Controller\MainController::home
 
 show:
-    path: /post/{id}/show
+    path: /post/{post}/show
     controller: App\Controller\MainController::show
     requirements:
-            id: '\d'
+            post: '\d'
 
 addreview:
     path: /addreview
     controller: App\Controller\MainController::addReview
+
+author:
+    path: /list/author
+    controller: App\Controller\MainController::listAuthors
+
+
+subscribe:
+    path: /subscribe
+    controller: App\Controller\MainController::subscribe
+
+
+addauthor:
+    path: /addauthor
+    controller: App\Controller\MainController::addAuthor
+
+addpost:
+    path: /addpost
+    controller: App\Controller\MainController::addPost
+
+addpostform:    
+    path: /addpost
+    controller: App\Controller\MainController::addPostForm
+    methods: [POST]

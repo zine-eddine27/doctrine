@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Blog-Liste des Posts{% endblock %}
+{% block title %}Blog-Liste des Auteurs{% endblock %}
 
 {% block body %}
 
 <div class="container d-flex justify-content-start">
     <div class="col-md-8 mt-5 text-left">
-       <p class="">Liste des posts</p> 
+       <p>Liste des Auteurs</p> 
        <hr>
             <ul class="nav flex-column">
-                {% for post in posts %}
+                {% for author in authors %}
                 <li class="nav-item">      
-                        <a href="{{ path('show',{post : post.id}) }}" class="nav-link">- {{ post.title }} ( voir article ) </a> 
+                        <a href="#">- {{ author.firstname }} {{ author.lastname }} ( a coder liens vers l 'auteur ) </a> 
                 </li>           
                 {% endfor %}
             </ul>
