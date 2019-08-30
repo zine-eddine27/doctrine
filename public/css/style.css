@@ -3,11 +3,15 @@ body{
    
 }
 .small{
-    font-size: 5px;
+    font-size: 0.8rem;
     color :rgb(189, 189, 189) ;
 }
 .date{
     font-size: 0.8rem ;
     color: grey ;
     font-style: italic ;
+}
+.like:hover{
+    cursor: pointer ;
+    
 }

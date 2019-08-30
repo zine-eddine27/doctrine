@@ -4,17 +4,20 @@
 
 {% block body %}
 
-<div class="container d-flex justify-content-start">
-    <div class="col-md-8 mt-5 text-left">
-       <p class="">Liste des posts</p> 
-       <hr>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p class="">Liste des posts</p> 
+            <hr>
             <ul class="nav flex-column">
                 {% for post in posts %}
-                <li class="nav-item">      
-                        <a href="{{ path('show',{post : post.id}) }}" class="nav-link">- {{ post.title }} ( voir article ) </a> 
-                </li>           
+                <li class="nav-item m-2">      
+                    <a href="{{ path('show',{post : post.id}) }}" class="nav-link"><img src="{{ post.image }}" width="120" class="rounded">
+                    <span class="ml-3 h4">{{ post.title }}</span></a> 
+                </li>                        
                 {% endfor %}
             </ul>
+        </div>
     </div>
-</div>
+
 {% endblock %}

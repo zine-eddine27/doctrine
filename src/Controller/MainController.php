@@ -126,10 +126,51 @@ class MainController extends AbstractController
             ]) ;
     }
 
-    public function addPostForm(Request $request, Author $author)
+    public function addPostForm(Request $request)
     {
+        $author_id = $request->request->get('id');
+        $title = $request->request->get('title');
+        $body = $request->request->get('body');
+        $image = $request->request->get('image');
 
-        dump($request); exit ;
+        $author =$this->getDoctrine()
+        ->getRepository(Author::class)
+        ->find($author_id);
+
+        $newPost = new Post() ;
+
+        $newPost->setAuthor($author) ;
+        $newPost->setTitle($title) ;
+        $newPost->setBody($body) ;
+        $newPost->setImage($image) ;
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $entityManager->persist($newPost);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('home');
+        
+        
+    }
+
+    public function addLike(Post $post){
+
+       $like =  $post->getNbLike() ;
+
+       $like++ ;
+
+       $post->setNbLike($like) ;
+
+       $entityManager = $this->getDoctrine()->getManager();
+
+       $entityManager->persist($post);
+
+       $entityManager->flush();
+
+       return $this->redirectToRoute('show',  ['post' => $post->getId()]);
+
     }
 
 }

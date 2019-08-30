@@ -31,6 +31,12 @@ addpost:
     controller: App\Controller\MainController::addPost
 
 addpostform:    
-    path: /addpost
+    path: /addpostform
     controller: App\Controller\MainController::addPostForm
     methods: [POST]
+
+addlike:
+    path: /post/{post}/like
+    controller: App\Controller\MainController::addLike
+    requirements:
+            post: '\d'

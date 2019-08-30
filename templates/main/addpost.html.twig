@@ -5,13 +5,13 @@
 {% block body %}
     <div class="col-md-6 p-5">
 
-        <form method="post" >
+        <form action="{{ path('addpostform') }}" method="post" >
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <label class="input-group-text">Selectionner votre nom dans la liste</label>
                 </div>
-                <select class="custom-select">
+                <select class="custom-select" name="id">
                   <option selected >Choix...</option>
                   {% for author in authors %}
                       <option value="{{ author.id }}">{{ author.firstname }} {{ author.lastname }}</option>
@@ -25,13 +25,13 @@
             </div>
 
             <label >Contenu</label>            
-            <textarea class="form-control"  rows="3"></textarea>
+            <textarea class="form-control"  rows="3" name="body"></textarea>
              
             <div class="form-group mt-2">
                 <label >Url de l' images</label>
                 <input type="text" class="form-control" name="image" placeholder="http://...">                
             </div>
-
+            
             <button type="submit" class="btn btn-primary">Créer mon post !</button>
             
         </form>
