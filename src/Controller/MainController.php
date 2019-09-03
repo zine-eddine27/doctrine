@@ -181,12 +181,33 @@ class MainController extends AbstractController
 
         $isLike = $this->getdoctrine()->getRepository(Love::class)->isLike($post, $user)  ;
 
+       
+        
+
         if( !empty($isLike)){
+
             
-            return $this->json(false) ;
+
+            $likePost =  $post->getNbLike() ;
+            $likePost-- ;
+
+            $likeId = $isLike[0]->getId();
+
+            $likeToDelete = $this->getdoctrine()->getRepository(Love::class)->find($likeId)  ;
+
+            $em->remove($likeToDelete) ;
+            
+            $post->setNbLike($likePost) ;  
+            
+            $em->persist($post);
+            $em->flush();
+
+            return $this->json([
+                'nbLike' =>  $post->getNbLike() ,
+                'statut' => 'dislike' ]) ;
 
 
-        } else{
+        } else {
 
         $like->setPost($post) ;
         $like->setUser($user) ;
@@ -202,7 +223,9 @@ class MainController extends AbstractController
 
         $em->flush();
 
-        return $this->json( $post->getNbLike() );
+        return $this->json([
+            'nbLike' =>  $post->getNbLike() ,
+            'statut' => 'like' ]);
         }
 
        

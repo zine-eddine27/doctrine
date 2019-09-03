@@ -220,6 +220,8 @@ class User implements UserInterface
     }
 
     public function getRoles()
+
+    
     {
         return ["role" => "admin"] ;
     }

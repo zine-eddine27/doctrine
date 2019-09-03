@@ -3,16 +3,12 @@ let app={
 
     init : function(){
 
-        console.log(document.location.href) ;
+        
 
         $('#like').click(app.addLike) ;
     },
 
     addLike : function(e){
-
-        
-
-        $id = $(e.currentTarget).attr('data-likeId') ;
 
         $.ajax(
         {
@@ -22,9 +18,18 @@ let app={
         }
         ).done(function(response){
 
-            if(response != false ){
-                $('#nbLike').text(response) ;
+
+console.log(response.dislike)
+
+
+             if( response.statut == 'like' ){
+
+                $('#nbLike').text(response.nbLike) ;
                 $('.like img').attr('src' , '/symfo/challenge-doctrine/public/images/liked.svg') ;
+            }else{
+
+                $('#nbLike').text(response.nbLike) ;
+                $('.like img').attr('src' , '/symfo/challenge-doctrine/public/images/noliked.svg') ;
             }
 
             

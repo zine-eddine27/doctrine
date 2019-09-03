@@ -40,3 +40,6 @@ body{
 .liked , .noliked:hover {
     cursor: pointer ;
 }
+.opacity{
+    opacity: 0.5 ;
+}
