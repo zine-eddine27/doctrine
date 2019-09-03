@@ -1,5 +1,6 @@
 body{
     font-family: 'Lato', sans-serif;
+    padding-bottom : 5rem ;
    
 }
 .small{
@@ -14,4 +15,28 @@ body{
 .like:hover{
     cursor: pointer ;
     
+}
+.h-grey:hover{
+    background: rgb(243, 243, 243) ;
+}
+.status{
+    color: rgb(48, 54, 73) ;
+    font-size: 1.2rem ;
+    font-weight: bold ;
+
+}
+.liked{
+
+    font-size: 3rem ;
+    color: brown ;
+}
+
+.noliked{
+
+    font-size: 2.5rem ;
+    color: blue ;
+}
+
+.liked , .noliked:hover {
+    cursor: pointer ;
 }

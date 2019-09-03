@@ -2,21 +2,28 @@
 
 namespace App\Controller;
 
-use App\Entity\Author ;
+use App\Entity\Love;
+use App\Entity\User;
 use App\Entity\Post ;
+
+
+use App\Entity\Author ;
+
 use App\Entity\Review ;
-
-
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use App\Form\RegisterType;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class MainController extends AbstractController
 {
     
     public function home()
     {
+
+       
         
         $posts = $this->getDoctrine()
         ->getRepository(Post::class)
@@ -30,11 +37,30 @@ class MainController extends AbstractController
 
     public function show(Post $post)
     {
+
+        $user = $this->getUser() ;
+
+        $like = new Love() ;
+
+        $isLike = $this->getdoctrine()->getRepository(Love::class)->isLike($post, $user)  ;
+
+        if( !empty($isLike)){
+
+            $ilike = 'liked' ;
+            
+        } else{
+
+            $ilike= 'noliked' ;
+        }
+
+        $whoLike = $this->getdoctrine()->getRepository(Love::class)->whoLike($post)  ;
+        
         
 
-
         return $this->render('main/show.html.twig', [
-            'posts' => $post
+            'whoLike'=>$whoLike ,
+            'posts' => $post ,
+            'like' => $ilike
         ]);
     }
 
@@ -46,131 +72,153 @@ class MainController extends AbstractController
 
         $pseudo = $request->request->get('pseudo');
         $review = $request->request->get('review');
-        $id = $request->request->get('post-id');
+        
 
         $post =$this->getDoctrine()
         ->getRepository(Post::class)
-        ->find($id);
+        ->find($request->request->get('post-id'));
 
         
         $newReview = new Review ;
-        $newReview->setUsername($pseudo)  ;
+        $newReview->setUsername( $this->getUser()->getFirstname() )  ;
+
         $newReview->setBody($review)  ;
+        $newReview->setUser($this->getUser())  ;
         $newReview->setPost($post)  ; 
 
         $entityManager->persist($newReview);
 
         $entityManager->flush();
 
-        return $this->redirectToRoute('show',  ['post' => $id]);
+        return $this->redirectToRoute('show',  ['post' => $post->getId() ]);
 
 
 
     }
 
-    public function listAuthors()
-    {
 
-        $authors = $this->getDoctrine()
-        ->getRepository(Author::class)
-        ->findAll();
+    public function subscribe(Request $request , ObjectManager $manager , UserPasswordEncoderInterface $encoder)
+    {      
 
+        $user = new User() ;
+
+        $form = $this->createForm( RegisterType::class , $user) ;
         
-        return $this->render('main/author.html.twig', [
-            'authors' => $authors
-        ]);
+        $form->handleRequest($request) ;
+
+        if( $form->isSubmitted() && $form->isValid()){
+
+            $hash = $encoder->encodePassword($user , $user->getPassword() ) ;
+
+            $user->setPassword($hash) ;
+
+            $manager->persist($user) ;
+            $manager->flush() ;
+
+            $this->addFlash('success', 'Votre compte à été créer avec succès. Vous pouvez maintenant vous connecter !');
+
+            return $this->redirectToRoute('login') ;
 
 
-    }
 
-    public function subscribe(Request $request)
-    {
-
-       
+        }
                 
-        return $this->render('main/subscribe.html.twig');
-
-
-    }
-
-
-    public function addAuthor(Request $request)
-    {
-
-        $firstname = $request->request->get('prenom');
-        $lastname= $request->request->get('nom');
-                
-        $newAuthor = new Author ;
-        $newAuthor->setFirstname($firstname)  ;
-        $newAuthor->setLastname($lastname)  ;       
-
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $entityManager->persist($newAuthor);
-
-        $entityManager->flush();
-
-        return $this->redirectToRoute('home');
-    }
-
-    public function addPost()
-    {
-        $authors = $this->getDoctrine()
-        ->getRepository(Author::class)
-        ->findAll();
-
-
-        return $this->render('main/addpost.html.twig',
+        return $this->render('main/subscribe.html.twig' , 
             [
-                'authors' => $authors
-            ]) ;
+                'formRegister' => $form->createView() 
+            ]);
+
     }
 
-    public function addPostForm(Request $request)
+    public function addPost( Request $request , ObjectManager $manager )
     {
-        $author_id = $request->request->get('id');
-        $title = $request->request->get('title');
-        $body = $request->request->get('body');
-        $image = $request->request->get('image');
-
-        $author =$this->getDoctrine()
-        ->getRepository(Author::class)
-        ->find($author_id);
+       
 
         $newPost = new Post() ;
 
-        $newPost->setAuthor($author) ;
-        $newPost->setTitle($title) ;
-        $newPost->setBody($body) ;
-        $newPost->setImage($image) ;
+        $form = $this->createFormBuilder($newPost)
+                     ->add('title')
+                     ->add('body')
+                     ->add('image')                     
+                     ->getForm() ; 
 
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $entityManager->persist($newPost);
-
-        $entityManager->flush();
-
-        return $this->redirectToRoute('home');
+        $form->handleRequest($request) ;  
         
+       
         
+
+        if ( $form->isSubmitted() && $form->isValid() ) { 
+            
+            $user = $this->getDoctrine()->getRepository(User::class)
+            ->find($this->getUser()->getId());
+           
+            $newPost->setUser($user) ;
+
+            $manager->persist($newPost);          
+    
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre article "'. $newPost->getTitle() .'" à bien été ajouté.');
+           
+            return $this->redirectToRoute('home') ;
+            
+        }
+
+        return $this->render('main/addpost.html.twig',
+            [
+                
+                'formPost' => $form->createView()
+            ]) ;
     }
 
-    public function addLike(Post $post){
 
-       $like =  $post->getNbLike() ;
 
-       $like++ ;
+    public function addLike(Post $post , ObjectManager $em){       
 
-       $post->setNbLike($like) ;
+        $user = $this->getUser() ;
 
-       $entityManager = $this->getDoctrine()->getManager();
+        $like = new Love() ;
 
-       $entityManager->persist($post);
+        $isLike = $this->getdoctrine()->getRepository(Love::class)->isLike($post, $user)  ;
 
-       $entityManager->flush();
+        if( !empty($isLike)){
+            
+            return $this->json(false) ;
 
-       return $this->redirectToRoute('show',  ['post' => $post->getId()]);
+
+        } else{
+
+        $like->setPost($post) ;
+        $like->setUser($user) ;
+
+        $likePost =  $post->getNbLike() ;
+
+        $likePost++ ;
+
+        $post->setNbLike($likePost) ;      
+
+        $em->persist($post);
+        $em->persist($like);
+
+        $em->flush();
+
+        return $this->json( $post->getNbLike() );
+        }
+
+       
 
     }
 
+    public function login(Request $request){
+
+
+        return $this->render('main/login.html.twig') ;
+    }
+
+    public function logout(){
+
+    }
+
+    
 }
+

@@ -16,10 +16,6 @@ class Review
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="text")
@@ -42,6 +38,12 @@ class Review
      * 
      */
     private $post;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reviews")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct(){
 
@@ -109,6 +111,18 @@ class Review
     public function setPost(?Post $post): self
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -6,18 +6,38 @@
 
 
     <div class="row">
-        <div class="col-md-12">
-            <p class="">Liste des posts</p> 
+        <div class="col-md-12">            
+             {% for type , messages in app.flashes %}
+                    <div class="alert alert-{{type}}" >
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        
+                    </div>
+             {% endfor %}
             <hr>
+            {% if app.user %}                
+                <p class="status">Bonjour <span class="font-italic text-info"><u>{{app.user.firstname | capitalize }} {{ app.user.lastname | capitalize  }}</u></span></p>                
+                <p class="h3 text-center">Articles les plus populaire</p>  
+                <hr>     
             <ul class="nav flex-column">
-                {% for post in posts %}
-                <li class="nav-item m-2">      
-                    <a href="{{ path('show',{post : post.id}) }}" class="nav-link"><img src="{{ post.image }}" width="120" class="rounded">
-                    <span class="ml-3 h4">{{ post.title }}</span></a> 
+                {% for post in posts  %}
+                <li class="h-grey nav-item m-2">                                     
+                    <a href="{{ path('show', { 'post' : post.id }) }}" class="nav-link"><img src="{{ post.image }}" width="300" class="rounded">
+                    <span class="ml-3 h4">{{ post.title }}<span class="date"> Posté le {{ post.createdAt|date('d/m/Y') }}</span></span></a>
+                   
                 </li>                        
                 {% endfor %}
-            </ul>
+
+                <li class="h-grey nav-item m-2">
+                    <a href="{{ path('addpost') }}" class="btn btn-outline-primary"> <span class="ml-3 h4">Ajouter un article...</span></a>
+                </li>
+               
+            </ul>           
+            {% else %}
+            Les articles sont disponibles uniquemenent aux abonnés → <a href="{{ path('login') }}">Connectez-vous</a> 
+            {% endif %}   
         </div>
     </div>
-
+    
 {% endblock %}

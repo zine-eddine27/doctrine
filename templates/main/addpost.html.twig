@@ -2,38 +2,19 @@
 
 {% block title %}Blog-{% endblock %}
 
+{% form_theme formPost 'bootstrap_4_layout.html.twig' %}
+
 {% block body %}
+
     <div class="col-md-6 p-5">
-
-        <form action="{{ path('addpostform') }}" method="post" >
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <label class="input-group-text">Selectionner votre nom dans la liste</label>
-                </div>
-                <select class="custom-select" name="id">
-                  <option selected >Choix...</option>
-                  {% for author in authors %}
-                      <option value="{{ author.id }}">{{ author.firstname }} {{ author.lastname }}</option>
-                  {% endfor %}               
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label >Titre du post</label>
-                <input type="text" class="form-control" name="title" placeholder="Titre du post">                
-            </div>
-
-            <label >Contenu</label>            
-            <textarea class="form-control"  rows="3" name="body"></textarea>
-             
-            <div class="form-group mt-2">
-                <label >Url de l' images</label>
-                <input type="text" class="form-control" name="image" placeholder="http://...">                
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Créer mon post !</button>
-            
-        </form>
+        {{ form_start(formPost) }}
+      
+        {{ form_row(formPost.title, { 'attr' : {'placeholder' : "Titre du post"} } ) }}
+        {{ form_row(formPost.body) }}
+        {{ form_row(formPost.image , { 'attr' : {'placeholder' : "http://..."} } ) }}
+        <input type="hidden" name="id" value={{ app.user.id }}>
+        <button type="submit" class="btn btn-primary">Créer mon post !</button> 
+        {{ form_end(formPost) }}
     </div>
+
 {% endblock %}

@@ -6,47 +6,42 @@
 
 <div class="container">
     <div class="row d-flex justify-content-around align-items-center mt-3">
-        <div class="col-md-6 mt-2 text-center">
-    
-            <p class="h4">{{ posts.title }}  </p>       
+        <div class="col-md-8 mt-2 text-center">
+            
+            <p class="h4 font-weight-bolder">{{ posts.title }}</p>       
             
             <img  src="{{ posts.image }}" class="rounded mx-auto img-fluid"> 
-             <div class="d-flex justify-content-between align-items-center mt-2">
-               <p class="small text-left">Ecrit par : {{ posts.Author.firstname }} {{ posts.Author.lastname }}</p>
-               <a href="{{ path('addlike',{post : posts.id}) }}"><p class="like mr-2"><img src="{{ asset('images/heart.svg') }}" title="liker cette image" width="25"></a>
-              <span>{{ posts.nbLike }}</span></p>
-             </div>  
-            
-
-            <p>{{ posts.body|nl2br }}</p>
+             <div class="d-flex justify-content-between align-items-center mt-2 px-4">
+               <p class="small text-left">Ecrit par : {{ posts.user.firstname }} {{ posts.user.lastname }}</p>               
+               <p id="like"  class="like"><img src="{{ asset('images/'~like~'.svg') }}" title=""  width="25"><span id="nbLike">{{ posts.nbLike }}</span></p>
+             </div>              
+             <hr>
+            <p class="text-left h6 font-weight-bolder"><u>{{ posts.title }}</u></p>
+            <p class="text-left">{{ posts.body|nl2br }}</p>
             
                    
        
         </div>
        
-        <div class="col-md-6 align-self-start mt-5 text-center"> 
+        <div class="col-md-4 align-self-start mt-5 text-center"> 
 
             <p class="h4 font-weight-bolder">Reviews</p>
             <hr>
 
             <form action="{{ path('addreview')}}" method="POST">            
-                <div class="form-group">
-                    <label for="pseudo-form">Pseudo</label>
-                    <input type="text" class="form-control" id="pseudo-form" name="pseudo" placeholder="Pseudo">
+                <div class="form-group">                    
                     <label for="reviews-form">Reviews</label>
                     <input type="text" class="form-control" id="reviews-form" name="review" placeholder="Ajouter une critique...">
                     <input type="hidden" name="post-id" value="{{ posts.id }}">
-                    <button type="submit" class="btn btn-primary mt-2">Envoyer</button>
+                    <button type="submit" class="btn btn-primary mt-5">Envoyer</button>
                 </div>
-            </form>
-
-                
+            </form>                
                 <hr>
                 {% if posts.review|length == 0 %}
-                    <p>Il y a aucun commentaire sur ce post ..</p>
+                    <p>... Aucun commentaire ...</p>
                 {% endif %}
                 {% for review in posts.review %}
-                <p> <span class="date mr-2">à {{review.createdAt|date('G:i')}}</span><span class="font-weight-bolder"> {{ review.username }} : </span><span class="font-italic">{{ review.body}}</span> </p> 
+                <p> <span class="date mr-2">à {{review.createdAt|date('G:i')}}</span><span class="font-weight-bolder"> {{ review.user.firstname }} : </span><span class="font-italic">{{ review.body}}</span> </p> 
                 {% endfor %}
                 
         </div>

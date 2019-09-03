@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -15,21 +16,34 @@ class Post
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
     */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 100,
+     *      minMessage = "Le titre de votre post doit contenir minimum {{ limit }} charactères.",
+     *      maxMessage = "Le titre de votre post doit contenir maximum {{ limit }} charactères."
+     * )
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * 
      */
     private $body;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url(
+     *    checkDNS = "ANY" ,
+     *    protocols = {"http", "https", "ftp"} , 
+     *    message = "l'url '{{ value }}' n 'est pas une URL valide.",
+     * )
      */
     private $image;
 
@@ -49,17 +63,19 @@ class Post
      */
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Author", inversedBy="Post")
-     * 
-     */
-    private $author;
+  
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="post")
      * 
      */
     private $review;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="post")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -146,17 +162,7 @@ class Post
         return $this;
     }
 
-    public function getAuthor(): ?Author
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?Author $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
+ 
 
     /**
      * @return Collection|review[]
@@ -185,6 +191,18 @@ class Post
                 $review->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

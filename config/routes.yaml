@@ -6,15 +6,11 @@ show:
     path: /post/{post}/show
     controller: App\Controller\MainController::show
     requirements:
-            post: '\d'
+            post: '\d*'
 
 addreview:
     path: /addreview
     controller: App\Controller\MainController::addReview
-
-author:
-    path: /list/author
-    controller: App\Controller\MainController::listAuthors
 
 
 subscribe:
@@ -22,21 +18,30 @@ subscribe:
     controller: App\Controller\MainController::subscribe
 
 
-addauthor:
-    path: /addauthor
-    controller: App\Controller\MainController::addAuthor
-
 addpost:
     path: /addpost
     controller: App\Controller\MainController::addPost
 
-addpostform:    
-    path: /addpostform
-    controller: App\Controller\MainController::addPostForm
-    methods: [POST]
 
-addlike:
-    path: /post/{post}/like
+like:
+    path: /post/{post}/show/like
     controller: App\Controller\MainController::addLike
     requirements:
-            post: '\d'
+            post: '\d*'
+
+login:
+    path: /login
+    controller: App\Controller\MainController::login
+
+
+logout:
+    path: /logout
+    controller: App\Controller\MainController::logout
+
+addfakepost:
+    path: /add/fake/post
+    controller: App\Controller\FakerController::addRandomPost
+
+
+
+    
